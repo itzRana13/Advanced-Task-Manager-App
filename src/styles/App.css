@@ -1,0 +1,52 @@
+.app {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  transition: var(--transition-base);
+}
+
+.app-header {
+  background-color: var(--bg-primary);
+  padding: 1.5rem 1rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition-base);
+}
+
+.app-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  transition: var(--transition-base);
+}
+
+.app-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  transition: var(--transition-base);
+}
+
+/* Mobile-first responsive design */
+@media (min-width: 768px) {
+  .app-header {
+    padding: 2rem 2rem;
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+
+  .app-main {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-main {
+    padding: 4rem;
+  }
+}
+
