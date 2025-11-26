@@ -1,4 +1,4 @@
-# Task Manager App
+# Advanced Task Manager App
 
 A modern, feature-rich Task Manager application built with React, featuring dark mode, drag-and-drop, and local storage persistence.
 
@@ -130,4 +130,3 @@ task-manager-app/
 ## License
 
 MIT
-
