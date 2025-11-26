@@ -63,6 +63,17 @@
   margin-bottom: 1rem;
 }
 
+.task-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: var(--transition-base);
+}
+
+.task-card:hover .task-card-actions {
+  opacity: 1;
+}
+
 .task-card-title-section {
   display: flex;
   align-items: flex-start;
@@ -142,6 +153,7 @@
   opacity: 0.9;
 }
 
+.edit-button,
 .delete-button {
   width: 2rem;
   height: 2rem;
@@ -155,12 +167,24 @@
   cursor: pointer;
   transition: var(--transition-base);
   flex-shrink: 0;
-  opacity: 0;
   padding: 0;
 }
 
-.task-card:hover .delete-button {
-  opacity: 1;
+.edit-button:hover {
+  color: var(--accent-color);
+  background-color: rgba(74, 144, 226, 0.1);
+  transform: scale(1.1);
+}
+
+.delete-button:hover {
+  color: var(--danger-color);
+  background-color: rgba(255, 77, 79, 0.1);
+  transform: scale(1.1);
+}
+
+.delete-button:active,
+.edit-button:active {
+  transform: scale(0.95);
 }
 
 .delete-button:hover {

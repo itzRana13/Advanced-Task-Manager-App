@@ -4,19 +4,33 @@ import { useTasks } from '../context/TaskContext';
 import TaskItem from './TaskItem';
 import '../styles/TaskList.css';
 
-function TaskList({ filter }) {
+function TaskList({ filter, searchQuery, onEditTask, onDeleteTask }) {
   const { tasks, reorderTasks, allTasks, completedTasks, pendingTasks } = useTasks();
 
   const filteredTasks = useMemo(() => {
+    let tasks = [];
     switch (filter) {
       case 'completed':
-        return completedTasks;
+        tasks = completedTasks;
+        break;
       case 'pending':
-        return pendingTasks;
+        tasks = pendingTasks;
+        break;
       default:
-        return allTasks;
+        tasks = allTasks;
     }
-  }, [filter, allTasks, completedTasks, pendingTasks]);
+
+    // Apply search filter
+    if (searchQuery && searchQuery.trim() !== '') {
+      const query = searchQuery.toLowerCase().trim();
+      tasks = tasks.filter(task => 
+        task.text.toLowerCase().includes(query) ||
+        (task.description && task.description.toLowerCase().includes(query))
+      );
+    }
+
+    return tasks;
+  }, [filter, allTasks, completedTasks, pendingTasks, searchQuery]);
 
   const handleDragEnd = (result) => {
     if (!result.destination) {
@@ -60,6 +74,8 @@ function TaskList({ filter }) {
                       index={index}
                       provided={provided}
                       snapshot={snapshot}
+                      onEdit={onEditTask}
+                      onDelete={onDeleteTask}
                     />
                   )}
                 </Draggable>

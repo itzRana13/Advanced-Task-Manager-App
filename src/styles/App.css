@@ -31,6 +31,10 @@
 
 .action-section {
   margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .add-task-button {
@@ -47,8 +51,19 @@
   cursor: pointer;
   transition: var(--transition-base);
   box-shadow: var(--shadow-sm);
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   justify-content: center;
+}
+
+.keyboard-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .add-task-button:hover {

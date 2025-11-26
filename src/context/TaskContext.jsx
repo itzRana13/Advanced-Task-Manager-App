@@ -50,6 +50,15 @@ export function TaskProvider({ children }) {
     setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
   }, [setTasks]);
 
+  // Update task
+  const updateTask = useCallback((id, updates) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task.id === id ? { ...task, ...updates } : task
+      )
+    );
+  }, [setTasks]);
+
   // Reorder tasks (for drag and drop)
   const reorderTasks = useCallback((startIndex, endIndex) => {
     setTasks(prevTasks => {
@@ -60,16 +69,25 @@ export function TaskProvider({ children }) {
     });
   }, [setTasks]);
 
+  // Task statistics
+  const taskStats = useMemo(() => ({
+    total: tasks.length,
+    completed: completedTasks.length,
+    pending: pendingTasks.length,
+  }), [tasks.length, completedTasks.length, pendingTasks.length]);
+
   const value = useMemo(() => ({
     tasks,
     allTasks,
     completedTasks,
     pendingTasks,
+    taskStats,
     addTask,
     toggleTask,
     deleteTask,
+    updateTask,
     reorderTasks,
-  }), [tasks, allTasks, completedTasks, pendingTasks, addTask, toggleTask, deleteTask, reorderTasks]);
+  }), [tasks, allTasks, completedTasks, pendingTasks, taskStats, addTask, toggleTask, deleteTask, updateTask, reorderTasks]);
 
   return (
     <TaskContext.Provider value={value}>

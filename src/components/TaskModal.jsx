@@ -13,22 +13,28 @@ const CARD_COLORS = [
   { name: 'Yellow', value: '#fadb14', class: 'yellow' },
 ];
 
-function TaskModal({ isOpen, onClose }) {
+function TaskModal({ isOpen, onClose, editingTask = null }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState(CARD_COLORS[0].value);
   const [error, setError] = useState('');
-  const { addTask } = useTasks();
+  const { addTask, updateTask } = useTasks();
 
-  // Reset form when modal opens/closes
+  // Reset form when modal opens/closes or when editing task changes
   useEffect(() => {
     if (isOpen) {
-      setTitle('');
-      setDescription('');
-      setSelectedColor(CARD_COLORS[0].value);
+      if (editingTask) {
+        setTitle(editingTask.text);
+        setDescription(editingTask.description || '');
+        setSelectedColor(editingTask.color || CARD_COLORS[0].value);
+      } else {
+        setTitle('');
+        setDescription('');
+        setSelectedColor(CARD_COLORS[0].value);
+      }
       setError('');
     }
-  }, [isOpen]);
+  }, [isOpen, editingTask]);
 
   // Close on Escape key
   useEffect(() => {
@@ -50,13 +56,24 @@ function TaskModal({ isOpen, onClose }) {
       return;
     }
 
-    const success = addTask(title, description, selectedColor);
-    if (success) {
+    if (editingTask) {
+      // Update existing task
+      updateTask(editingTask.id, {
+        text: title.trim(),
+        description: description.trim(),
+        color: selectedColor,
+      });
       onClose();
     } else {
-      setError('Failed to add task. Please try again.');
+      // Create new task
+      const success = addTask(title, description, selectedColor);
+      if (success) {
+        onClose();
+      } else {
+        setError('Failed to add task. Please try again.');
+      }
     }
-  }, [title, description, selectedColor, addTask, onClose]);
+  }, [title, description, selectedColor, addTask, updateTask, editingTask, onClose]);
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
@@ -157,7 +174,7 @@ function TaskModal({ isOpen, onClose }) {
               type="submit"
               className="submit-button"
             >
-              Create Task
+              {editingTask ? 'Update Task' : 'Create Task'}
             </button>
           </div>
         </form>
