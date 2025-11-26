@@ -1,19 +1,24 @@
 .task-list {
   min-height: 200px;
   transition: var(--transition-base);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
 
 .task-list.drag-over {
   background-color: var(--bg-tertiary);
   border-radius: 12px;
+  padding: 1rem;
   transition: var(--transition-base);
 }
 
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
   color: var(--text-muted);
   animation: fadeIn 0.5s ease-out;
+  grid-column: 1 / -1;
 }
 
 .empty-state p {
@@ -26,14 +31,36 @@
   opacity: 0.7;
 }
 
-/* Responsive design */
+/* Responsive design - Grid layout for cards */
 @media (min-width: 640px) {
+  .task-list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
   .empty-state {
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
+    grid-column: 1 / -1;
   }
 
   .empty-state p {
     font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .task-list {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

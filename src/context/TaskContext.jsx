@@ -20,13 +20,15 @@ export function TaskProvider({ children }) {
   const pendingTasks = useMemo(() => tasks.filter(task => !task.completed), [tasks]);
 
   // Add task with validation
-  const addTask = useCallback((text) => {
+  const addTask = useCallback((text, description = '', color = '#4a90e2') => {
     if (!text || text.trim() === '') {
       return false; // Validation failed
     }
     const newTask = {
       id: Date.now().toString(),
       text: text.trim(),
+      description: description.trim(),
+      color: color,
       completed: false,
       createdAt: new Date().toISOString(),
     };
