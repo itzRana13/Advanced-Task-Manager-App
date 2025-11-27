@@ -2,6 +2,10 @@
 
 A modern, feature-rich Task Manager application built with React, featuring dark mode, drag-and-drop, and local storage persistence.
 
+## 🌐 Live Demo
+
+**Try it now:** [https://advanced-task-manager-nrzyx7d9v-itzrana13s-projects.vercel.app/](https://advanced-task-manager-nrzyx7d9v-itzrana13s-projects.vercel.app/)
+
 ## Features
 
 ### Basic Features
@@ -32,6 +36,12 @@ A modern, feature-rich Task Manager application built with React, featuring dark
 - **Vite** - Build tool and dev server
 - **react-beautiful-dnd** - Drag and drop functionality
 - **CSS3** - Styling with CSS variables for theming
+
+## 🚀 Deployment
+
+- **Live URL**: [https://advanced-task-manager-nrzyx7d9v-itzrana13s-projects.vercel.app/](https://advanced-task-manager-nrzyx7d9v-itzrana13s-projects.vercel.app/)
+- **Deployed on**: Vercel
+- **Repository**: [GitHub](https://github.com/itzRana13/Advanced-Task-Manager-App.git)
 
 ## Installation
 
