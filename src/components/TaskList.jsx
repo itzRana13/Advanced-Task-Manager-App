@@ -4,7 +4,7 @@ import { useTasks } from '../context/TaskContext';
 import TaskItem from './TaskItem';
 import '../styles/TaskList.css';
 
-function TaskList({ filter, searchQuery, onEditTask, onDeleteTask }) {
+function TaskList({ filter, searchQuery, onEditTask, onDeleteTask, onViewTask }) {
   const { tasks, reorderTasks, allTasks, completedTasks, pendingTasks } = useTasks();
 
   const filteredTasks = useMemo(() => {
@@ -76,6 +76,7 @@ function TaskList({ filter, searchQuery, onEditTask, onDeleteTask }) {
                       snapshot={snapshot}
                       onEdit={onEditTask}
                       onDelete={onDeleteTask}
+                      onView={onViewTask}
                     />
                   )}
                 </Draggable>

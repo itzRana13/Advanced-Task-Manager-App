@@ -7,12 +7,15 @@ import FilterButtons from './components/FilterButtons';
 import ThemeToggle from './components/ThemeToggle';
 import TaskStats from './components/TaskStats';
 import SearchBar from './components/SearchBar';
+import TaskViewModal from './components/TaskViewModal';
 import './styles/App.css';
 
 function App() {
   const [filter, setFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [viewingTask, setViewingTask] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleFilterChange = useCallback((newFilter) => {
@@ -32,6 +35,23 @@ function App() {
   const handleEditTask = useCallback((task) => {
     setEditingTask(task);
     setIsModalOpen(true);
+  }, []);
+
+  const handleViewTask = useCallback((task) => {
+    setViewingTask(task);
+    setIsViewModalOpen(true);
+  }, []);
+
+  const closeViewModal = useCallback(() => {
+    setIsViewModalOpen(false);
+    setViewingTask(null);
+  }, []);
+
+  const handleDeleteFromView = useCallback((task) => {
+    // This will be handled by TaskListWrapper's delete confirmation
+    // We just need to close the view modal
+    setIsViewModalOpen(false);
+    setViewingTask(null);
   }, []);
 
   // Keyboard shortcut: Ctrl+K or Cmd+K to open modal
@@ -57,19 +77,30 @@ function App() {
           </header>
           <main className="app-main">
             <div className="action-section">
-              <button className="add-task-button" onClick={openModal} aria-label="Add new task">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 4V16M4 10H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <TaskStats />
+              <button className="add-task-button" onClick={openModal} aria-label="Add new task" title="Add New Task (Ctrl+K)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
                 </svg>
                 <span>Add New Task</span>
               </button>
-              <span className="keyboard-hint">Press Ctrl+K</span>
             </div>
-            <TaskStats />
             <SearchBar onSearchChange={setSearchQuery} />
             <FilterButtons activeFilter={filter} onFilterChange={handleFilterChange} />
-            <TaskListWrapper filter={filter} searchQuery={searchQuery} onEditTask={handleEditTask} />
+            <TaskListWrapper 
+              filter={filter} 
+              searchQuery={searchQuery} 
+              onEditTask={handleEditTask}
+              onViewTask={handleViewTask}
+            />
             <TaskModal isOpen={isModalOpen} onClose={closeModal} editingTask={editingTask} />
+            <TaskViewModal 
+              isOpen={isViewModalOpen} 
+              task={viewingTask}
+              onClose={closeViewModal}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteFromView}
+            />
           </main>
         </div>
       </TaskProvider>

@@ -87,7 +87,7 @@ function TaskModal({ isOpen, onClose, editingTask = null }) {
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">Create New Task</h2>
+          <h2 className="modal-title">{editingTask ? 'Edit Task' : 'Create New Task'}</h2>
           <button
             className="modal-close-button"
             onClick={onClose}
@@ -133,7 +133,12 @@ function TaskModal({ isOpen, onClose, editingTask = null }) {
           </div>
 
           <div className="form-field">
-            <label className="form-label">Card Color</label>
+            <label className="form-label">
+              Card Color
+              {editingTask && (
+                <span className="edit-indicator">(Change color)</span>
+              )}
+            </label>
             <div className="color-picker">
               {CARD_COLORS.map((color) => (
                 <button

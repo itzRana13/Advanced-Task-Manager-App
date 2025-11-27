@@ -1,19 +1,57 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { useTasks } from '../context/TaskContext';
 import '../styles/TaskItem.css';
 
-const TaskItem = memo(({ task, index, provided, snapshot, onEdit, onDelete }) => {
+const TaskItem = memo(({ task, index, provided, snapshot, onEdit, onDelete, onView }) => {
   const { toggleTask } = useTasks();
+  const dragStartPos = useRef({ x: 0, y: 0 });
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback((e) => {
+    e.stopPropagation();
     toggleTask(task.id);
   }, [task.id, toggleTask]);
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback((e) => {
+    e.stopPropagation();
     if (onDelete) {
       onDelete(task);
     }
   }, [task, onDelete]);
+
+  const handleEdit = useCallback((e) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(task);
+    }
+  }, [task, onEdit]);
+
+  const handleMouseDown = useCallback((e) => {
+    // Don't track if clicking on interactive elements
+    if (e.target.closest('button, input[type="checkbox"]')) {
+      return;
+    }
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+  }, []);
+
+  const handleCardClick = useCallback((e) => {
+    // Don't open view if clicking on interactive elements
+    if (e.target.closest('button, input[type="checkbox"]')) {
+      return;
+    }
+    // Don't open if this was a drag (mouse moved more than 5px)
+    const deltaX = Math.abs(e.clientX - dragStartPos.current.x);
+    const deltaY = Math.abs(e.clientY - dragStartPos.current.y);
+    if (deltaX > 5 || deltaY > 5) {
+      return;
+    }
+    // Don't open if currently dragging
+    if (snapshot.isDragging) {
+      return;
+    }
+    if (onView) {
+      onView(task);
+    }
+  }, [task, onView, snapshot.isDragging]);
 
   const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -36,6 +74,8 @@ const TaskItem = memo(({ task, index, provided, snapshot, onEdit, onDelete }) =>
         ...provided.draggableProps.style,
         '--card-color': cardColor,
       }}
+      onMouseDown={handleMouseDown}
+      onClick={handleCardClick}
     >
       <div className="task-card-header">
         <div className="task-card-title-section">
@@ -51,7 +91,7 @@ const TaskItem = memo(({ task, index, provided, snapshot, onEdit, onDelete }) =>
         <div className="task-card-actions">
           <button
             className="edit-button"
-            onClick={() => onEdit && onEdit(task)}
+            onClick={handleEdit}
             aria-label={`Edit task "${task.text}"`}
             title="Edit task"
           >
@@ -80,9 +120,16 @@ const TaskItem = memo(({ task, index, provided, snapshot, onEdit, onDelete }) =>
       )}
       
       <div className="task-card-footer">
-        <span className="task-date">
-          {formatDate(task.createdAt)}
-        </span>
+        <div className="task-dates">
+          <span className="task-date" title={`Created: ${formatDate(task.createdAt)}`}>
+            📅 {formatDate(task.createdAt)}
+          </span>
+          {task.updatedAt && task.updatedAt !== task.createdAt && (
+            <span className="task-updated" title={`Last updated: ${formatDate(task.updatedAt)}`}>
+              ✏️ Updated {formatDate(task.updatedAt)}
+            </span>
+          )}
+        </div>
         {task.completed && (
           <span className="task-status-badge completed-badge">
             Completed
